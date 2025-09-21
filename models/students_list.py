@@ -1,4 +1,4 @@
-from models.Student import Student
+from models.student import Student
 from typing import List, Optional
 
 class StudentsList:
