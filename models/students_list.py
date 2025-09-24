@@ -7,26 +7,56 @@ class StudentsList:
         self._capacity = capacity
 
     def add(self, student: Student) -> bool:
-        if len(self._students) < self._capacity:
+        try:
+            if not isinstance(student, Student):
+                raise TypeError("Only Student objects can be added.")
+            if len(self._students) >= self._capacity:
+                raise OverflowError("Student list capacity reached.")
             self._students.append(student)
             return True
-        return False
+        except Exception as e:
+            print(f"Error adding student: {e}")
+            return False
 
     def remove(self, seat_no: str) -> bool:
-        for s in self._students:
-            if s.seat_no == seat_no:
-                self._students.remove(s)
-                return True
-        return False
+        try:
+            for s in self._students:
+                if s.seat_no.strip().lower() == seat_no.strip().lower():
+                    self._students.remove(s)
+                    return True
+            raise ValueError(f"Student with seat_no {seat_no} not found.")
+        except Exception as e:
+            print(f"Error removing student: {e}")
+            return False
 
     def search(self, key: str) -> Optional[Student]:
-        return next((s for s in self._students if s.name.lower() == key.lower() or s.seat_no == key), None)
+        try:
+            key = key.strip().lower()
+            student = next(
+                (
+                    s for s in self._students
+                    if s.name.lower() == key or s.seat_no.strip().lower() == key
+                ),
+                None
+            )
+            if student is None:
+                raise LookupError(f"No student found for key '{key}'.")
+            return student
+        except Exception as e:
+            print(f"Error searching student: {e}")
+            return None
 
     def sort_by_name(self):
-        self._students.sort(key=lambda s: s.name.lower())
+        try:
+            self._students.sort(key=lambda s: s.name.lower())
+        except Exception as e:
+            print(f"Error sorting by name: {e}")
 
     def sort_by_seat(self):
-        self._students.sort()
+        try:
+            self._students.sort(key=lambda s: s.seat_no.lower())
+        except Exception as e:
+            print(f"Error sorting by seat: {e}")
 
     def __iter__(self):
         return iter(self._students)
